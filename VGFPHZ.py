@@ -1,9 +1,8 @@
-#check that range in loops are correct. Fortran starts arrays at 1. Make sure my variables are correct
 from math import pi, cos, sin, e
 from numpy import zeros, matmul, loadtxt, array
 from matplotlib import pyplot
 
-#F is never defined!!
+#needed variables
 Ver = []
 Theta = []
 Hor = []
@@ -12,7 +11,7 @@ Phi = []
 #value from a sphere on page 42
 NDATA = 181 #a parameter that's given
 
-#a bunch of variables that probably come from vgffmc program. Madison is not far on this yet
+#variables from VGFFMC
 V = [0,0,0]
 rrr = zeros([3,3],float)
 rhat = []#zeros([3],float)
@@ -20,7 +19,7 @@ thhat = []#zeros([3],float)
 phhat = []#zeros([3],float)
 deg = pi/180.0
 
-#numbers from what Bro. Lines gave me
+#values from what Bro. Lines gave me
 nuse = 720
 w = 10.0 #* 10**-6
 alpha = 0.0
