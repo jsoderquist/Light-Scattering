@@ -1,8 +1,8 @@
-from math import pi, cos, sin, e
+from math import cos, sin, e, pi
 from numpy import zeros, matmul, loadtxt, array
 from matplotlib import pyplot
 
-#needed variables
+#variables we want to calculate
 Ver = []
 Theta = []
 Hor = []
@@ -11,7 +11,7 @@ Phi = []
 #value from a sphere on page 42
 NDATA = 181 #a parameter that's given
 
-#variables from VGFFMC
+#a bunch of variables that probably come from vgffmc program. Madison is not far on this yet
 V = [0,0,0]
 rrr = zeros([3,3],float)
 rhat = []#zeros([3],float)
@@ -19,24 +19,21 @@ thhat = []#zeros([3],float)
 phhat = []#zeros([3],float)
 deg = pi/180.0
 
-#values from what Bro. Lines gave me
-nuse = 720
+#numbers from what Bro. Lines gave me
+nuse = 117
 w = 10.0 #* 10**-6
 alpha = 0.0
 beta = 0.0
 gamma = 0.0
 RAD = 1.55 #*10**-6 #radius given to me
-ER = 1.48590004
-EI = 0.122000001
-temp = 15.6099672
-volume = 15.5985308
-count = 52
+ER = loadtxt("Figure3.fields", skiprows = 4, usecols = (0), max_rows = 1)
+EI = loadtxt("Figure3.fields", skiprows = 4, usecols = (1), max_rows = 1)
 
 #pull from file
-r = loadtxt("figure3fields", skiprows = 5, usecols = (0,1,2), max_rows = 720)
-dvol = loadtxt("figure3fields", skiprows = 5, usecols = 3, max_rows = 720)
-Ereal = array(loadtxt("figure3fields", skiprows = 725, usecols = (0,2,4), max_rows = 720))
-Eimaginary = array(loadtxt("figure3fields", skiprows = 725, usecols = (1,3,5), max_rows = 720))
+r = loadtxt("Figure3.fields", skiprows = 5, usecols = (0,1,2), max_rows = nuse)
+dvol = loadtxt("Figure3.fields", skiprows = 5, usecols = 3, max_rows = nuse)
+Ereal = array(loadtxt("Figure3.fields", skiprows = 5+nuse, usecols = (0,2,4), max_rows = nuse))
+Eimaginary = array(loadtxt("Figure3.fields", skiprows = 5+nuse, usecols = (1,3,5), max_rows = nuse))
 E = Ereal + 1j * Eimaginary
 
 #rotation matrix
@@ -60,8 +57,7 @@ def rot(rrr, alpha, beta, gamma):
 eps = complex(ER,EI)
 chi = (eps-1)/(4*pi)
 
-#print(dvol)
-
+#calculate total volume
 dsum = 0
 for n in range(nuse):
     dsum += dvol[n]
@@ -101,8 +97,6 @@ for iang in range(NDATA-1):
     
     rhat = matmul(rrr,V)
     
-    #print(thhat,phhat)
-    
     fh = 0
     fv = 0
     for mu in range(nuse):
@@ -111,10 +105,9 @@ for iang in range(NDATA-1):
         for j in range(3):
             rdot += r[mu][j]*rhat[j]  
         
-        #print(rdot)
         #calculate factors that don't depend on i and j
         c = 1j*k**3*chi*(dvol[mu])*e**(-1j*k*rdot)
-        #print(rdot)
+        #print(c,k**3,chi,dvol[mu],k)
         
         #put scattering amplitude together
         tde = 0
@@ -124,17 +117,14 @@ for iang in range(NDATA-1):
         for i in range(3):
             tde += thhat[i]*E[mu][i]
             pde += phhat[i]*E[mu][i]
-        #print(tde,pde)
         
         #put scattering amplitude together
         fh += c*tde
         fv += c*pde
-        #print(fv)
     
     #separate into horizontal and verticle components while converting to dif. scat. cross section
     hor = fh*fh.conjugate() / k**2
     ver = fv*fv.conjugate() / k**2
-    #print(hor,ver)
     
     #the complex part will be 0, so we'll make it real now
     hor = hor.real
@@ -157,5 +147,3 @@ pyplot.title("Horizontal vs Theta")
 pyplot.xlabel("Scattering angle (degrees)")
 pyplot.ylabel("Normalized Scattering Cross Section (x10^-3)")
 pyplot.show()
-
-#print(dvol)
