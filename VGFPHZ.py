@@ -11,7 +11,7 @@ Phi = []
 #value from a sphere on page 42
 NDATA = 181 #a parameter that's given
 
-#a bunch of variables that probably come from vgffmc program. Madison is not far on this yet
+#a bunch of variables that probably come from vgffmc program
 V = [0,0,0]
 rrr = zeros([3,3],float)
 rhat = []#zeros([3],float)
@@ -19,7 +19,7 @@ thhat = []#zeros([3],float)
 phhat = []#zeros([3],float)
 deg = pi/180.0
 
-#numbers from what Bro. Lines gave me
+#Values from page 43 in the discertation
 nuse = 117
 w = 10.0 #* 10**-6
 alpha = 0.0
@@ -139,9 +139,9 @@ for iang in range(NDATA-1):
 #display results
 pyplot.plot(Theta, Ver)
 pyplot.title("Vertical vs Theta")
-pyplot.xlabel("Scattering angle (degrees)")
-pyplot.ylabel("Normalized Scattering Cross Section (x10^-3)")
-pyplot.show()
+#pyplot.xlabel("Scattering angle (degrees)")
+#pyplot.ylabel("Normalized Scattering Cross Section (x10^-3)")
+#pyplot.show()
 pyplot.plot(Theta, Hor)
 pyplot.title("Horizontal vs Theta")
 pyplot.xlabel("Scattering angle (degrees)")
